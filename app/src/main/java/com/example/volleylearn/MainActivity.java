@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.volleylearn.activity.ImageRequestActivity;
 import com.example.volleylearn.activity.SimpleRequestActivity;
 
 public class MainActivity extends Activity {
@@ -19,7 +20,9 @@ public class MainActivity extends Activity {
 
     private void initViews() {
         Button btnSimple = (Button) findViewById(R.id.btn_simple_request);
+        Button btnImage = (Button) findViewById(R.id.btn_image_request);
 
+        btnImage.setOnClickListener(btnClickListener);
         btnSimple.setOnClickListener(btnClickListener);
     }
 
@@ -29,6 +32,10 @@ public class MainActivity extends Activity {
             switch (view.getId()) {
                 case R.id.btn_simple_request:
                     startActivity(SimpleRequestActivity.class);
+                    break;
+                case R.id.btn_image_request:
+                    startActivity(ImageRequestActivity.class);
+                    break;
                 default:
                     break;
             }

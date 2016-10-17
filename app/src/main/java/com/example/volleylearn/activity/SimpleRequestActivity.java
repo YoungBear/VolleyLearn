@@ -33,7 +33,7 @@ public class SimpleRequestActivity extends Activity {
         initViews();
 
         // Instantiate the RequestQueue.
-        mRequestQueue = Volley.newRequestQueue(this);
+        mRequestQueue = Volley.newRequestQueue(this.getApplicationContext());
 //        simpleRequest();
         simplePostRequest();
     }
@@ -95,10 +95,19 @@ public class SimpleRequestActivity extends Activity {
 
                 return params;
             }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put("apiKey", "xxxxxxxxxxxxxxx");
+                return headers;
+            }
         };
+        //关闭Cache
+        stringRequest.setShouldCache(false);
         stringRequest.setTag(TAG);
         mRequestQueue.add(stringRequest);
-
     }
 
     @Override

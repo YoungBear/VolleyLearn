@@ -17,7 +17,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.SimpleRequestActivity" android:label="@string/simple_request_name">
+        <activity
+            android:name=".activity.SimpleRequestActivity"
+            android:label="@string/simple_request_name">
+        </activity>
+        <activity
+            android:name=".activity.ImageRequestActivity"
+            android:label="@string/image_request_name">
         </activity>
     </application>
 
