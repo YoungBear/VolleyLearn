@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">VolleyLearn</string>
+    <string name="simple_request_name">Simple Request</string>
 </resources>
