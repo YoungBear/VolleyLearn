@@ -4,29 +4,25 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.LruCache;
 import android.widget.ImageView;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.Volley;
 import com.example.volleylearn.R;
+import com.example.volleylearn.volley.VolleyController;
 
 public class ImageRequestActivity extends Activity {
     private static final String TAG = ImageRequestActivity.class.getSimpleName();
 
-    private ImageView mImageView;
+    private ImageView mImageView, mImageView3;
     private NetworkImageView mNetworkImageView;
-
-    private RequestQueue mRequestQueue;
-    private ImageLoader mImageLoader;
 
     private static final String TEST_URL_1 = "http://i.imgur.com/CqmBjo5.jpg";
     private static final String TEST_URL_2 = "http://i.imgur.com/zkaAooq.jpg";
+    private static final String TEST_URL_3 = "http://imgur.com/0gqnEaY.jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,17 +32,18 @@ public class ImageRequestActivity extends Activity {
         initViews();
         imageRequest();
         setNetworkImageView();
+        imageLoaderGet();
     }
 
     private void initViews() {
         mImageView = (ImageView) findViewById(R.id.img_display);
+
         mNetworkImageView = (NetworkImageView) findViewById(R.id.network_img_display);
+        mImageView3 = (ImageView) findViewById(R.id.img_display3);
     }
 
     private void imageRequest() {
-        if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(this.getApplicationContext());
-        }
+
         ImageRequest imageRequest = new ImageRequest(
                 TEST_URL_1,
                 new Response.Listener<Bitmap>() {
@@ -61,60 +58,34 @@ public class ImageRequestActivity extends Activity {
                         Log.d(TAG, "onErrorResponse, error: " + error.getMessage());
                     }
                 }
-
         );
-        imageRequest.setTag(TAG);
-        mRequestQueue.add(imageRequest);
+        VolleyController.getInstance(this).addToRequestQueue(imageRequest, TAG);
     }
 
+
     private void setNetworkImageView() {
-        if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(this.getApplicationContext());
-        }
-        if (mImageLoader == null) {
-            mImageLoader = new ImageLoader(mRequestQueue,
-                    new LruBitmapCache());
-        }
-        mNetworkImageView.setImageUrl(TEST_URL_2, mImageLoader);
+        ImageLoader imageLoader = VolleyController.getInstance(this).getImageLoader();
+        mNetworkImageView.setImageUrl(TEST_URL_2, imageLoader);
+    }
+
+    private void imageLoaderGet() {
+        ImageLoader imageLoader = VolleyController.getInstance(this).getImageLoader();
+        imageLoader.get(TEST_URL_3, new ImageLoader.ImageListener() {
+            @Override
+            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                mImageView3.setImageBitmap(response.getBitmap());
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "Image Load Error: " + error.getMessage());
+            }
+        });
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (mRequestQueue != null) {
-            mRequestQueue.cancelAll(TAG);
-        }
-    }
-
-    private static class LruBitmapCache extends LruCache<String, Bitmap> implements ImageLoader.ImageCache {
-        public static int getDefaultLruCacheSize() {
-            final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-            final int cacheSize = maxMemory / 8;
-
-            return cacheSize;
-        }
-
-        public LruBitmapCache() {
-            this(getDefaultLruCacheSize());
-        }
-
-        public LruBitmapCache(int sizeInKiloBytes) {
-            super(sizeInKiloBytes);
-        }
-
-        @Override
-        protected int sizeOf(String key, Bitmap value) {
-            return value.getRowBytes() * value.getHeight() / 1024;
-        }
-
-        @Override
-        public Bitmap getBitmap(String url) {
-            return get(url);
-        }
-
-        @Override
-        public void putBitmap(String url, Bitmap bitmap) {
-            put(url, bitmap);
-        }
+        VolleyController.getInstance(this).cancelPendingRequests(TAG);
     }
 }

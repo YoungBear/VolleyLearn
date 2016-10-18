@@ -7,12 +7,11 @@ import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.volleylearn.R;
+import com.example.volleylearn.volley.VolleyController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +20,6 @@ public class SimpleRequestActivity extends Activity {
 
     private static final String TAG = SimpleRequestActivity.class.getSimpleName();
 
-    private RequestQueue mRequestQueue;
     private static final String TEST_URL = "http://api.androidhive.info/volley/person_object.json";
 
     private TextView txtDisplay;
@@ -31,9 +29,6 @@ public class SimpleRequestActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_request);
         initViews();
-
-        // Instantiate the RequestQueue.
-        mRequestQueue = Volley.newRequestQueue(this.getApplicationContext());
 //        simpleRequest();
         simplePostRequest();
     }
@@ -61,10 +56,8 @@ public class SimpleRequestActivity extends Activity {
                         txtDisplay.setText("That didn't work!");
                     }
                 });
-        // Set the tag on the request.
-        stringRequest.setTag(TAG);
 
-        mRequestQueue.add(stringRequest);
+        VolleyController.getInstance(this).addToRequestQueue(stringRequest, TAG);
     }
 
     private void simplePostRequest() {
@@ -106,15 +99,12 @@ public class SimpleRequestActivity extends Activity {
         };
         //关闭Cache
         stringRequest.setShouldCache(false);
-        stringRequest.setTag(TAG);
-        mRequestQueue.add(stringRequest);
+        VolleyController.getInstance(this).addToRequestQueue(stringRequest, TAG);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (mRequestQueue != null) {
-            mRequestQueue.cancelAll(TAG);
-        }
+        VolleyController.getInstance(this).cancelPendingRequests(TAG);
     }
 }

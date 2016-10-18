@@ -25,6 +25,10 @@
             android:name=".activity.ImageRequestActivity"
             android:label="@string/image_request_name">
         </activity>
+        <activity
+            android:name=".activity.JSONRequestActivity"
+            android:label="@string/json_request_name">
+        </activity>
     </application>
 
 </manifest>
