@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import com.example.volleylearn.activity.ImageRequestActivity;
 import com.example.volleylearn.activity.JSONRequestActivity;
+import com.example.volleylearn.activity.PersonReuqestActivity;
 import com.example.volleylearn.activity.SimpleRequestActivity;
 
 public class MainActivity extends Activity {
@@ -23,10 +24,12 @@ public class MainActivity extends Activity {
         Button btnSimple = (Button) findViewById(R.id.btn_simple_request);
         Button btnImage = (Button) findViewById(R.id.btn_image_request);
         Button btnJSON = (Button) findViewById(R.id.btn_json_request);
+        Button btnPerson = (Button) findViewById(R.id.btn_person_request);
 
         btnSimple.setOnClickListener(btnClickListener);
         btnImage.setOnClickListener(btnClickListener);
         btnJSON.setOnClickListener(btnClickListener);
+        btnPerson.setOnClickListener(btnClickListener);
     }
 
     private View.OnClickListener btnClickListener = new View.OnClickListener() {
@@ -41,6 +44,9 @@ public class MainActivity extends Activity {
                     break;
                 case R.id.btn_json_request:
                     startActivity(JSONRequestActivity.class);
+                    break;
+                case R.id.btn_person_request:
+                    startActivity(PersonReuqestActivity.class);
                     break;
                 default:
                     break;

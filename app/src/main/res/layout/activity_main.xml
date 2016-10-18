@@ -34,4 +34,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="JSON Request"/>
+
+    <Button
+        android:id="@+id/btn_person_request"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Person Request"/>
 </LinearLayout>

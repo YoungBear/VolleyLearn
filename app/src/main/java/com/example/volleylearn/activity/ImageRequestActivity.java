@@ -51,7 +51,7 @@ public class ImageRequestActivity extends Activity {
                     public void onResponse(Bitmap response) {
                         mImageView.setImageBitmap(response);
                     }
-                }, 0, 0, null,
+                }, 0, 0, ImageView.ScaleType.CENTER, Bitmap.Config.ARGB_8888,
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
